@@ -43,6 +43,8 @@ def load_model_from_config(ckpt, verbose=False):
     sd = pl_sd["state_dict"]
     return sd
 
+def dummy(images, **kwargs):
+    return images, False
 
 def load_img(image, h0, w0):
     image = image.convert("RGB")
@@ -287,13 +289,14 @@ if __name__ == '__main__':
     model = instantiate_from_config(config.modelUNet)
     _, _ = model.load_state_dict(sd, strict=False)
     model.eval()
-
+    model.safety_checker = dummy
     modelCS = instantiate_from_config(config.modelCondStage)
     _, _ = modelCS.load_state_dict(sd, strict=False)
     modelCS.eval()
-
+    modelCS.safety_checker = dummy
     modelFS = instantiate_from_config(config.modelFirstStage)
     _, _ = modelFS.load_state_dict(sd, strict=False)
+    modelFS.safety_checker = dummy
     modelFS.eval()
     del sd
 

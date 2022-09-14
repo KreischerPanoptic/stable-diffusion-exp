@@ -82,6 +82,8 @@ def load_mask(mask, h0, w0, newH, newW, invert=False):
     image = torch.from_numpy(image)
     return image
 
+def dummy(images, **kwargs):
+    return images, False
 
 def generate(
         image,
@@ -286,14 +288,17 @@ if __name__ == '__main__':
 
     model = instantiate_from_config(config.modelUNet)
     _, _ = model.load_state_dict(sd, strict=False)
+    model.safety_checker = dummy
     model.eval()
 
     modelCS = instantiate_from_config(config.modelCondStage)
     _, _ = modelCS.load_state_dict(sd, strict=False)
+    modelCS.safety_checker = dummy
     modelCS.eval()
 
     modelFS = instantiate_from_config(config.modelFirstStage)
     _, _ = modelFS.load_state_dict(sd, strict=False)
+    modelFS.safety_checker = dummy
     modelFS.eval()
     del sd
 

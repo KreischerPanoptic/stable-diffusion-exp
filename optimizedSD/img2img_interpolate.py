@@ -33,6 +33,8 @@ def chunk(it, size):
     it = iter(it)
     return iter(lambda: tuple(islice(it, size)), ())
 
+def dummy(images, **kwargs):
+    return images, False
 
 def load_model_from_config(ckpt, verbose=False):
     print(f"Loading model from {ckpt}")

@@ -4,8 +4,13 @@ from diffusers import LDMTextToImagePipeline
 pipe = LDMTextToImagePipeline.from_pretrained("CompVis/stable-diffusion-v1-3-diffusers", use_auth_token=True)
 
 prompt = "19th Century wooden engraving of Elon musk"
+def dummy(images, **kwargs):
+    return images, False
 
 seed = torch.manual_seed(1024)
+
+pipe.safety_checker = dummy
+
 images = pipe([prompt], batch_size=1, num_inference_steps=50, guidance_scale=7, generator=seed, torch_device="cpu")[
     "sample"]
 

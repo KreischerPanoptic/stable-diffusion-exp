@@ -34,6 +34,8 @@ def chunk(it, size):
     it = iter(it)
     return iter(lambda: tuple(islice(it, size)), ())
 
+def dummy(images, **kwargs):
+    return images, False
 
 def load_model_from_config(ckpt, verbose=False):
     logging.info(f"Loading model from {ckpt}")
@@ -253,14 +255,17 @@ if __name__ == '__main__':
 
     model = instantiate_from_config(config.modelUNet)
     _, _ = model.load_state_dict(sd, strict=False)
+    model.safety_checker = dummy
     model.eval()
 
     modelCS = instantiate_from_config(config.modelCondStage)
     _, _ = modelCS.load_state_dict(sd, strict=False)
+    modelCS.safety_checker = dummy
     modelCS.eval()
 
     modelFS = instantiate_from_config(config.modelFirstStage)
     _, _ = modelFS.load_state_dict(sd, strict=False)
+    modelFS.safety_checker = dummy
     modelFS.eval()
     del sd
 
